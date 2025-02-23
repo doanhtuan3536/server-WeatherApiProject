@@ -25,6 +25,7 @@ public class GeolocationService {
             ipLocator.Open(data);
             inputStream.close();
         } catch (IOException e) {
+            System.out.println("ga chua hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
             LOGGER.error(e.getMessage(), e);
         }
     }
