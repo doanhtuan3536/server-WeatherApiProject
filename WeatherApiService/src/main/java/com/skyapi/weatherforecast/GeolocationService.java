@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -35,22 +34,24 @@ public class GeolocationService {
 //        } catch (IOException e) {
 //            LOGGER.error(e.getMessage(), e);
 //        }
-        try (InputStream inputStream = getClass().getResourceAsStream(DBPath);
-             ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+        try (InputStream inputStream = getClass().getResourceAsStream(DBPath)) {
 
             if (inputStream == null) {
                 throw new IOException("Database file not found in classpath: " + DBPath);
             }
 
-            byte[] dataChunk = new byte[8192]; // 8KB buffer
+            long fileSize = inputStream.available(); // Get file size
+            byte[] data = new byte[(int) fileSize]; // Allocate exact size buffer
+
+            int offset = 0;
             int bytesRead;
-
-            while ((bytesRead = inputStream.read(dataChunk, 0, dataChunk.length)) != -1) {
-                buffer.write(dataChunk, 0, bytesRead);
+            while ((bytesRead = inputStream.read(data, offset, data.length - offset)) != -1) {
+                offset += bytesRead;
             }
+            System.out.println(data.length);
+            ipLocator.Open(data); // Load into IP2Location
 
-            ipLocator.Open(buffer.toByteArray());
-            LOGGER.info("IP2Location database loaded successfully.");
+            LOGGER.info("IP2Location database successfully loaded.");
 
         } catch (IOException e) {
             LOGGER.error("Failed to load IP2Location database", e);
