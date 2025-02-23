@@ -21,6 +21,7 @@ public class GeolocationService {
             System.out.println(DBPath);
             System.out.println("Ngu hoc hahahahah");
             InputStream inputStream = getClass().getResourceAsStream(DBPath);
+            System.out.println(inputStream);
             byte[] data = inputStream.readAllBytes();
             ipLocator.Open(data);
             inputStream.close();
