@@ -19,6 +19,7 @@ public class GeolocationService {
         try {
             DBPath = getClass().getClassLoader().getResource("ip2locdb/IP2LOCATION-LITE-DB3.BIN").getPath();
             System.out.println(DBPath);
+            System.out.println("Ngu hoc hahahahah");
             InputStream inputStream = getClass().getResourceAsStream(DBPath);
             byte[] data = inputStream.readAllBytes();
             ipLocator.Open(data);
