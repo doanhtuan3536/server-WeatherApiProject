@@ -10,7 +10,7 @@ RUN mvn clean package -DskipTests
 FROM openjdk:17-jdk-slim
 WORKDIR /app
 
-COPY --from=build /app/target/WeatherApiService-1.0.0.war drcomputer.war
+COPY --from=build /app/WeatherApiService/target/WeatherApiService-1.0.0.war drcomputer.war
 EXPOSE 8080 
 
 ENTRYPOINT ["java","-jar","drcomputer.war"]
