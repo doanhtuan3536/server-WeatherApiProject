@@ -7,8 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.io.InputStream;
 
 @Service
@@ -17,26 +17,43 @@ public class GeolocationService {
     private String DBPath = "/ip2locdb/IP2LOCATION-LITE-DB3.BIN";
     private IP2Location ipLocator = new IP2Location();
     public GeolocationService() {
-        try {
-            // String DBPath1 = getClass().getClassLoader().getResource("ip2locdb/IP2LOCATION-LITE-DB3.BIN").getPath();
-            // System.out.println(DBPath1);
-            // System.out.println("Ngu hoc hahahahah");
-            // InputStream inputStream = getClass().getResourceAsStream(DBPath);
-            // System.out.println(inputStream);
-            // byte[] data = inputStream.readAllBytes();
-            // ipLocator.Open(data);
-            // inputStream.close();
-            URL resource = getClass().getClassLoader().getResource("/ip2locdb/IP2LOCATION-LITE-DB3.BIN");
-            if (resource == null) {
-                throw new IOException("Database file not found in classpath");
+//        try {
+////            DBPath = getClass().getClassLoader().getResource("ip2locdb/IP2LOCATION-LITE-DB3.BIN").getPath();
+////            System.out.println(getClass().getClassLoader().getResource("ip2locdb/IP2LOCATION-LITE-DB3.BIN").getPath());
+////            InputStream inputStream = getClass().getResourceAsStream(DBPath);
+////            byte[] data = inputStream.readAllBytes();
+////            ipLocator.Open(data);
+////            inputStream.close();
+//            URL resource = getClass().getClassLoader().getResource("ip2locdb/IP2LOCATION-LITE-DB3.BIN");
+//            if (resource == null) {
+//                throw new IOException("Database file not found in classpath");
+//            }
+//
+//            DBPath = resource.getPath(); // Get the absolute path to the file
+//
+//            ipLocator.Open(DBPath); // Open the database using the file path
+//        } catch (IOException e) {
+//            LOGGER.error(e.getMessage(), e);
+//        }
+        try (InputStream inputStream = getClass().getResourceAsStream(DBPath);
+             ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+
+            if (inputStream == null) {
+                throw new IOException("Database file not found in classpath: " + DBPath);
             }
 
-            DBPath = resource.getPath(); // Get the absolute path to the file
+            byte[] dataChunk = new byte[8192]; // 8KB buffer
+            int bytesRead;
 
-            ipLocator.Open(DBPath); // Open the database using the file path
+            while ((bytesRead = inputStream.read(dataChunk, 0, dataChunk.length)) != -1) {
+                buffer.write(dataChunk, 0, bytesRead);
+            }
+
+            ipLocator.Open(buffer.toByteArray());
+            LOGGER.info("IP2Location database loaded successfully.");
+
         } catch (IOException e) {
-            System.out.println("ga chua hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error("Failed to load IP2Location database", e);
         }
     }
 
