@@ -26,7 +26,7 @@ public class GeolocationService {
             // byte[] data = inputStream.readAllBytes();
             // ipLocator.Open(data);
             // inputStream.close();
-            URL resource = getClass().getClassLoader().getResource("ip2locdb/IP2LOCATION-LITE-DB3.BIN");
+            URL resource = getClass().getClassLoader().getResource("/ip2locdb/IP2LOCATION-LITE-DB3.BIN");
             if (resource == null) {
                 throw new IOException("Database file not found in classpath");
             }
