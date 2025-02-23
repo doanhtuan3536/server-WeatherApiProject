@@ -10,7 +10,7 @@ RUN mvn clean package -DskipTests
 FROM openjdk:17-jdk-slim
 WORKDIR /app
 
-COPY src/resources/ip2locdb/IP2LOCATION-LITE-DB3.BIN /app/ip2locdb/IP2LOCATION-LITE-DB3.BIN
+COPY /WeatherApiService/src/main/resources/ip2locdb/IP2LOCATION-LITE-DB3.BIN /app/ip2locdb/IP2LOCATION-LITE-DB3.BIN
 
 COPY --from=build /app/WeatherApiService/target/WeatherApiService-1.0.0.jar drcomputer.jar
 EXPOSE 8080 
