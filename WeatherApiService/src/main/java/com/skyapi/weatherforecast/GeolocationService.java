@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -34,21 +35,20 @@ public class GeolocationService {
 //        } catch (IOException e) {
 //            LOGGER.error(e.getMessage(), e);
 //        }
-        try (InputStream inputStream = getClass().getResourceAsStream(DBPath)) {
+        try (InputStream inputStream = getClass().getResourceAsStream(DBPath);
+             ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
 
             if (inputStream == null) {
                 throw new IOException("Database file not found in classpath: " + DBPath);
             }
 
-            long fileSize = inputStream.available(); // Get file size
-            byte[] data = new byte[(int) fileSize]; // Allocate exact size buffer
-
-            int offset = 0;
+            byte[] buffer = new byte[8192]; // Read in 8KB chunks
             int bytesRead;
-            while ((bytesRead = inputStream.read(data, offset, data.length - offset)) != -1) {
-                offset += bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
             }
-            System.out.println(data.length);
+
+            byte[] data = outputStream.toByteArray();
             ipLocator.Open(data); // Load into IP2Location
 
             LOGGER.info("IP2Location database successfully loaded.");
