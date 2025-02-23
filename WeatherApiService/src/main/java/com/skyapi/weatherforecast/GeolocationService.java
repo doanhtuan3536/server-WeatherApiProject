@@ -17,7 +17,7 @@ public class GeolocationService {
     private IP2Location ipLocator = new IP2Location();
     public GeolocationService() {
         try {
-            DBPath1 = getClass().getClassLoader().getResource("ip2locdb/IP2LOCATION-LITE-DB3.BIN").getPath();
+            String DBPath1 = getClass().getClassLoader().getResource("ip2locdb/IP2LOCATION-LITE-DB3.BIN").getPath();
             System.out.println(DBPath1);
             System.out.println("Ngu hoc hahahahah");
             InputStream inputStream = getClass().getResourceAsStream(DBPath);
