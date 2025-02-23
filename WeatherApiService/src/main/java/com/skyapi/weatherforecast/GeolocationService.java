@@ -17,7 +17,7 @@ public class GeolocationService {
     private IP2Location ipLocator = new IP2Location();
     public GeolocationService() {
         try {
-            InputStream inputStream = getClass().getResourceAsStream(DBPath);
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream(DBPath);
             byte[] data = inputStream.readAllBytes();
             ipLocator.Open(data);
             inputStream.close();
